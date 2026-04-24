@@ -3,20 +3,34 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main',
                 url: 'https://github.com/Ali200168-cyber/jenkins-web-demo.git'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Nginx') {
             steps {
                 sh '''
-                cp index.html /var/www/html/index.html
-                systemctl restart nginx
+                echo "Deploying website..."
+
+                # Copy file to nginx directory
+                sudo cp index.html /var/www/html/index.html
+
+                echo "Deployment completed"
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline executed successfully 🚀"
+        }
+
+        failure {
+            echo "Pipeline failed ❌ check logs"
         }
     }
 }
